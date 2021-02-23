@@ -1,4 +1,4 @@
-name: Rust
+name: Prerelease Push
 on:
   push:
     branches: [ main ]
