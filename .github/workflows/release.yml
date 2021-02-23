@@ -22,8 +22,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: "${{ steps.date.outputs.date }}"
-        release_name: "Release Build ${{ steps.date.outputs.date }}"
+        tag_name: ${{ steps.date.outputs.date }}
+        release_name: Release Build ${{ steps.date.outputs.date }}
         body: |
           Note: This is a draft release build, awaiting changelog.
         draft: true
