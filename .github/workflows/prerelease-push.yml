@@ -24,9 +24,19 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v$CARGO_MAKE_CRATE_VERSION-$GITHUB_RUN_NUMBER
-        release_name: Prerelease v$CARGO_MAKE_CRATE_VERSION
+        tag_name: v${CARGO_MAKE_CRATE_VERSION}-${GITHUB_RUN_NUMBER}
+        release_name: Prerelease v${CARGO_MAKE_CRATE_VERSION}
         body: |
           Note: This is an automatic prerelease build from GitHub actions. It may be unstable and is not recommended for normal users.
         draft: false
         prerelease: true
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: ./target/debug/brunch-tools-daemon
+        asset_name: brunch-tools-daemon
+        asset_content_type: application/octet-stream
