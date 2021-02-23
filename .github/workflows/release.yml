@@ -1,0 +1,40 @@
+name: Release Builder
+on:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Code
+      run: cargo build --verbose
+    - uses: actions/upload-artifact@v2
+      with:
+        name: brunch-tools-daemon
+        path: target/debug/brunch-tools-daemon
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: "${{ steps.date.outputs.date }}"
+        release_name: "Release Build ${{ steps.date.outputs.date }}"
+        body: |
+          Note: This is a draft release build, awaiting changelog.
+        draft: true
+        prerelease: false
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: ./target/debug/brunch-tools-daemon
+        asset_name: brunch-tools-daemon
+        asset_content_type: application/octet-stream
