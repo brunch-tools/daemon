@@ -1,6 +1,6 @@
 # Brunch Tools Daemon
 
-The Brunch Daemon Rust Prokect
+The Brunch Daemon Rust Project
 
 ## Getting Started
 
