@@ -2,6 +2,7 @@ use tungstenite::Message;
 use std::fs::File;
 use std::io::Read;
 use json::JsonValue;
+use duct::cmd;
 
 pub fn get_info() -> Message {
     let mut data = json::JsonValue::new_object();
@@ -13,7 +14,16 @@ pub fn get_info() -> Message {
 }
 
 pub fn get_toolkit_ver() -> String {
-    return "NONE".parse().unwrap();
+    let file = match File::open("/usr/local/bin/brunch-toolkit") {
+        Ok(file) => Some(file),
+        Err(_err) => None,
+    };
+    return if !file.is_none() {
+        let version = cmd!("cat", "/usr/local/bin/brunch-toolkit").pipe(cmd!("grep","'TOOLVER=\\\"'")).pipe(cmd!("sed","'s/TOOLVER=\"v//'")).pipe(cmd!("sed","'s/.\"//'")).read().unwrap();
+        version
+    } else {
+        "NONE".parse().unwrap()
+    }
 }
 
 pub fn get_toolkit_daemon_ver() -> String {
