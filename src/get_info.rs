@@ -3,6 +3,7 @@ use std::fs::File;
 use std::io::Read;
 use json::JsonValue;
 use duct::cmd;
+use regex::Regex;
 
 pub fn get_info() -> Message {
     let mut data = json::JsonValue::new_object();
@@ -19,8 +20,8 @@ pub fn get_toolkit_ver() -> String {
         Err(_err) => None,
     };
     return if !file.is_none() {
-        let version = cmd!("cat", "/usr/local/bin/brunch-toolkit").pipe(cmd!("grep","'TOOLVER=\\\"'")).pipe(cmd!("sed","'s/TOOLVER=\"v//'")).pipe(cmd!("sed","'s/.\"//'")).read().unwrap();
-        version
+        let version = cmd!("cat", "/usr/local/bin/brunch-toolkit").pipe(cmd!("grep",r#"TOOLVER=\""#)).read().unwrap();
+        String::from(Regex::new(".\"").unwrap().replace(&*version.replace("TOOLVER=\"v", ""), ""))
     } else {
         "NONE".parse().unwrap()
     }

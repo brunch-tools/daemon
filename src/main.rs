@@ -32,9 +32,14 @@ fn main() {
                     }
                     match parsed["action"].as_str().unwrap() {
                         "get_info" => websocket.write_message(get_info::get_info()).unwrap(),
+                        "update_toolkit" => {
+                            websocket.write_message(Message::from("{\"success\":\"BEGAN UPDATING TOOLKIT\"}")).unwrap();
+                            update::update_toolkit();
+                            websocket.write_message(Message::from("{\"success\":\"FINISHED UPDATING TOOLKIT\"}")).unwrap();
+                        },
                         "update_daemon" => {
+                            websocket.write_message(Message::from("{\"success\":\"BEGAN UPDATING DAEMON\"}")).unwrap();
                             update::update_daemon();
-                            websocket.write_message(Message::from("{\"success\":\"BEGAN UPDATING DAEMON\"}")).unwrap()
                         },
                         _ => websocket.write_message(Message::from("{\"error\":\"UNEXPECTED INPUT\"}")).unwrap()
                     }
