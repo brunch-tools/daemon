@@ -37,6 +37,11 @@ fn main() {
                             update::update_toolkit();
                             websocket.write_message(Message::from("{\"success\":\"FINISHED UPDATING TOOLKIT\"}")).unwrap();
                         },
+                        "update_framework" => {
+                            websocket.write_message(Message::from("{\"success\":\"BEGAN UPDATING FRAMEWORK\"}")).unwrap();
+                            update::update_framework();
+                            websocket.write_message(Message::from("{\"success\":\"FINISHED UPDATING FRAMEWORK\"}")).unwrap();
+                        },
                         "update_daemon" => {
                             websocket.write_message(Message::from("{\"success\":\"BEGAN UPDATING DAEMON\"}")).unwrap();
                             update::update_daemon();
