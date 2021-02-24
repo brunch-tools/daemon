@@ -1,5 +1,5 @@
 mod get_info;
-mod update_daemon;
+mod update;
 
 use std::net::TcpListener;
 use std::thread::spawn;
@@ -32,7 +32,10 @@ fn main() {
                     }
                     match parsed["action"].as_str().unwrap() {
                         "get_info" => websocket.write_message(get_info::get_info()).unwrap(),
-                        "update_daemon" => update_daemon::update_daemon(),
+                        "update_daemon" => {
+                            update::update_daemon();
+                            websocket.write_message(Message::from("{\"success\":\"BEGAN UPDATING DAEMON\"}")).unwrap()
+                        },
                         _ => websocket.write_message(Message::from("{\"error\":\"UNEXPECTED INPUT\"}")).unwrap()
                     }
                 }
