@@ -20,7 +20,7 @@ pub fn get_toolkit_ver() -> String {
         Err(_err) => None,
     };
     return if !file.is_none() {
-        let version = cmd!("cat", "/usr/local/bin/brunch-toolkit").pipe(cmd!("grep",r#"TOOLVER=\""#)).read().unwrap();
+        let version = cmd!("cat", "/usr/local/bin/brunch-toolkit").pipe(cmd!("grep",r#"TOOLVER=\"v"#)).read().unwrap();
         String::from(Regex::new(".\"").unwrap().replace(&*version.replace("TOOLVER=\"v", ""), ""))
     } else {
         "NONE".parse().unwrap()
