@@ -9,7 +9,6 @@ void main(List<String> arguments) {
   print('brunch-tools-daemon: Attempted to bind to '+HOST+':'+PORT.toString()+'!');
   HttpServer.bind(HOST, PORT).then((server) => {
     server.listen((request) {
-      print('brunch-tools-daemon: Bound, listening to websocket requests.');
       WebSocketTransformer.upgrade(request).then((socket) => {
         webSocketHandler.newRequest(socket)
       });
@@ -18,12 +17,11 @@ void main(List<String> arguments) {
 }
 
 class WebSocketHandler {
-  Map<String, WebSocket> _users = {};
-
   void newRequest(WebSocket socket) {
     log('Incoming connection ${socket.hashCode}');
     socket.listen((event) {
-
+      socket.add(event);
+      socket.close(1);
     });
   }
 
